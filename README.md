@@ -1,4 +1,4 @@
-# sspai-spider
+# paiping-app-spider
 
 [少数派](https://sspai.com) 网站文章爬虫，专注于抓取「派评」栏目中的应用推荐。
 
