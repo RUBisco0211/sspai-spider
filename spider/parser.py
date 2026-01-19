@@ -4,7 +4,7 @@ from markdownify import markdownify as md
 import logging
 
 
-class SspaiParser:
+class PaiAppParser:
     def parse_article(self, article, html_content):
         """
         Parse the article HTML and split into app sections.

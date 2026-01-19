@@ -2,7 +2,7 @@ import requests
 import logging
 
 
-class SspaiFetcher:
+class PaiAppFetcher:
     BASE_URL = "https://sspai.com/api/v1"
     HEADERS = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",

@@ -1,9 +1,9 @@
-from .saver import SspaiSaver
-from .fetcher import SspaiFetcher
-from .parser import SspaiParser
+from .saver import PaiAppSaver
+from .fetcher import PaiAppFetcher
+from .parser import PaiAppParser
 
 __all__ = [
-    "SspaiSaver",
-    "SspaiFetcher",
-    "SspaiParser",
+    "PaiAppSaver",
+    "PaiAppFetcher",
+    "PaiAppParser",
 ]

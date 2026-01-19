@@ -3,7 +3,7 @@ import logging
 from .util import fetch_image_bytes
 
 
-class SspaiSaver:
+class PaiAppSaver:
     def __init__(self, output_dir="data"):
         self.output_dir = output_dir
         if not os.path.exists(output_dir):
