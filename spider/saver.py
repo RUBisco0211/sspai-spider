@@ -54,7 +54,7 @@ class PaiAppSaver:
 
             # Skip if already downloaded
             if os.path.exists(local_path):
-                logging.info(f"Saver:图片已存在，跳过 {filename}")
+                logging.info(f"Saver:图片已存在, 跳过 {filename}")
                 continue
 
             # Download image
@@ -68,14 +68,3 @@ class PaiAppSaver:
                     logging.warning(f"Saver:下载图片失败 {img_src}")
             except Exception as e:
                 logging.error(f"Saver:下载图片失败 {img_src}: {e}")
-
-
-if __name__ == "__main__":
-    saver = SspaiSaver(output_dir="spider_data_test")
-    test_data = {
-        "date": "2026-01-05",
-        "title": "TestApp",
-        "platforms": ["iOS", "Android"],
-        "content": "# Test Content",
-    }
-    saver.save_app(test_data)

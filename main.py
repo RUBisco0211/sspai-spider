@@ -2,7 +2,8 @@ import logging
 import time
 import datetime
 import os
-from dataclasses import dataclass
+import json
+from dataclasses import dataclass, asdict
 
 import pyrallis
 
@@ -36,8 +37,15 @@ def main(args: RunConfig):
     if os.path.exists(args.output_dir) is False:
         os.makedirs(args.output_dir)
 
+    final_cfg = {
+        **asdict(args),
+        "start": start.strftime("%Y-%m-%d %H:%M:%S"),
+        "end": end.strftime("%Y-%m-%d %H:%M:%S"),
+    }
+
     setup_logging(args.log_file)
     logging.info("启动sspai爬虫...")
+    logging.info(f"运行配置: {json.dump(final_cfg)}")
 
     fetcher = PaiAppFetcher()
     parser = PaiAppParser()
@@ -48,11 +56,11 @@ def main(args: RunConfig):
     processed_count = 0
 
     while keep_going:
-        logging.info(f"抓取文章列表，offset={offset}...")
+        logging.info(f"抓取文章列表, offset={offset}...")
         articles = fetcher.fetch_feed_articles(limit=args.page_size, offset=offset)
 
         if not articles:
-            logging.info("没有更多文章，停止抓取")
+            logging.info("没有更多文章, 停止抓取")
             break
 
         for article in articles:
