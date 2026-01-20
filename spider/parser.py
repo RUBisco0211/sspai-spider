@@ -32,8 +32,9 @@ class PaiAppParser:
                     "html_elements": [],
                     "article_title": article["title"],
                 }
-            elif current_app:
-                current_app["html_elements"].append(element)
+            else:
+                if current_app:
+                    current_app["html_elements"].append(element)
 
         if current_app:
             self._finalize_app(current_app, apps, pub_date)

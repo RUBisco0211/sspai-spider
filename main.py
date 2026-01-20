@@ -16,6 +16,7 @@ class RunConfig:
     output_dir: str = "data"
     page_size: int = 20
     log_file: str = "spider.log"
+    sleep_time: int = 1
 
 
 def setup_logging(path: str):
@@ -64,25 +65,22 @@ def main(args: RunConfig):
             break
 
         for article in articles:
-            # Check date
             released_time = article.get("released_time", 0)
             article_date = datetime.datetime.fromtimestamp(released_time)
 
             if article_date < start or article_date > end:
-                logging.info(f"文章发表时间 {article_date} 超出时间范围")
+                logging.info(f"文章发布时间 {article_date} 超出时间范围")
                 keep_going = False
                 break
 
-            # Filter by title
             title = article.get("title", "")
             if "派评" in title and "近期值得关注" in title:
                 logging.info(f"发现目标文章: {title} ({article_date})")
 
-                # Fetch Detail
                 detail = fetcher.get_article_detail(article["id"])
                 if not detail:
                     continue
-                # Parse
+
                 apps = parser.parse_article(detail, detail.get("body", ""))
                 logging.info(f"文章中发现 {len(apps)} 个 app 推荐")
 
@@ -90,13 +88,12 @@ def main(args: RunConfig):
                     saver.save_app(app)
                     processed_count += 1
 
-                # Be nice to the server
-                time.sleep(1)
+                time.sleep(args.sleep_time)
 
         offset += args.page_size
-        time.sleep(1)  # Sleep between pages
+        time.sleep(args.sleep_time)
 
-    logging.info(f"完成。处理了 {processed_count} 个 app")
+    logging.info(f"完成. 处理了 {processed_count} 个 app")
 
 
 if __name__ == "__main__":
