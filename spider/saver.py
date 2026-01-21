@@ -1,6 +1,8 @@
 import logging
 import os
 
+from spider.data import PaiAppData
+
 from .util import fetch_image_bytes
 
 
@@ -10,16 +12,11 @@ class PaiAppSaver:
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
-    def save_app(self, app_data):
-        """
-        Save the parsed app data to a markdown file.
-        Filename format: {YYYY-MM-DD}/{AppTitle}-[{Platforms}].md
-        Images are downloaded to {AppTitle}-images/ subdirectory.
-        """
-        platforms_str = ",".join(app_data["platforms"])
-        filename = f"{app_data['title']}-[{platforms_str}].md"
+    def save_app(self, app_data: PaiAppData):
+        platforms_str = ",".join(app_data.platforms)
+        filename = f"{app_data.title}-[{platforms_str}].md"
 
-        date_dir = os.path.join(self.output_dir, app_data["date"])
+        date_dir = os.path.join(self.output_dir, app_data.date)
         if not os.path.exists(date_dir):
             os.makedirs(date_dir)
 
@@ -29,8 +26,8 @@ class PaiAppSaver:
         if not os.path.exists(app_img_dir):
             os.makedirs(app_img_dir)
 
-        content = app_data["content"]
-        self._download_images(app_data["img_list"], app_img_dir)
+        content = app_data.content
+        self._download_images(app_data.img_list, app_img_dir)
 
         filepath = os.path.join(date_dir, filename)
 
@@ -41,18 +38,15 @@ class PaiAppSaver:
         except Exception as e:
             logging.error(f"Saver:保存失败 {filename}: {e}")
 
-    def _download_images(self, list: list[str], img_dir):
+    def _download_images(self, list: list[str], img_dir: str):
         for img_src in list:
-            # Extract filename from URL
             filename = img_src.split("?")[0].split("/")[-1]
             local_path = os.path.join(img_dir, filename)
 
-            # Skip if already downloaded
             if os.path.exists(local_path):
                 logging.info(f"Saver:图片已存在, 跳过 {filename}")
                 continue
 
-            # Download image
             try:
                 image_data = fetch_image_bytes(img_src)
                 if image_data:

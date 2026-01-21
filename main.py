@@ -5,7 +5,7 @@ import os
 import time
 from dataclasses import asdict, dataclass
 
-import pyrallis
+from pyrallis import argparsing
 
 from spider import PaiAppFetcher, PaiAppParser, PaiAppSaver
 
@@ -27,7 +27,6 @@ def setup_logging(path: str):
     )
 
 
-@pyrallis.wrap()
 def main(args: RunConfig):
     assert args.months > 0, "时间范围不合法"
     assert args.page_size > 0, "分页大小不合法"
@@ -60,10 +59,6 @@ def main(args: RunConfig):
         logging.info(f"抓取文章列表, offset={offset}...")
         articles = fetcher.fetch_feed_articles(limit=args.page_size, offset=offset)
 
-        if not articles:
-            logging.info("没有更多文章, 停止抓取")
-            break
-
         for article in articles:
             released_time = article.get("released_time", 0)
             article_date = datetime.datetime.fromtimestamp(released_time)
@@ -73,15 +68,16 @@ def main(args: RunConfig):
                 keep_going = False
                 break
 
-            title = article.get("title", "")
+            title = str(article.get("title", ""))
+            aid = int(article["id"])
             if "派评" in title and "近期值得关注" in title:
-                logging.info(f"发现目标文章: {title} ({article_date})")
+                logging.info(f"发现目标文章: {aid} {title} ({article_date})")
 
-                detail = fetcher.get_article_detail(article["id"])
-                if not detail:
+                detail = fetcher.get_article_detail(aid)
+                if detail is None:
+                    logging.info(f"文章 {aid} 内容不存在")
                     continue
-
-                apps = parser.parse_article(detail, detail.get("body", ""))
+                apps = parser.parse_apps(detail)
                 logging.info(f"文章中发现 {len(apps)} 个 app 推荐")
 
                 for app in apps:
@@ -97,4 +93,5 @@ def main(args: RunConfig):
 
 
 if __name__ == "__main__":
-    main()
+    cfg = argparsing.parse(config_class=RunConfig)
+    main(cfg)

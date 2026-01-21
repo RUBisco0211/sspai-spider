@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 import requests
 
@@ -17,7 +18,7 @@ class PaiAppFetcher:
         self.session = requests.Session()
         self.session.headers.update(self.HEADERS)
 
-    def fetch_feed_articles(self, limit=20, offset=0):
+    def fetch_feed_articles(self, limit=20, offset=0) -> list[dict[str, Any]]:
         url = f"{self.BASE_URL}/article/index/page/get"
         params = {
             "limit": limit,
@@ -28,15 +29,16 @@ class PaiAppFetcher:
         try:
             response = self.session.get(url, params=params)
             response.raise_for_status()
-            data = response.json()
+            data: dict[str, Any] = response.json()
             if data.get("error") == 0:
                 return data.get("data", [])
-            return []
+            else:
+                raise Exception("服务错误")
         except Exception as e:
             logging.error(f"Fetcher:抓取失败 {e}")
             return []
 
-    def get_article_detail(self, article_id):
+    def get_article_detail(self, article_id: int) -> dict[str, Any] | None:
         url = f"{self.BASE_URL}/article/info/get"
         params = {"id": article_id, "view": "second"}
         try:
