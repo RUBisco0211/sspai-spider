@@ -8,7 +8,6 @@ from bs4.element import Tag
 from markdownify import markdownify as md
 
 from .data import PaiAppData, PaiAppRawData
-from .fetcher import PaiAppFetcher
 
 
 class PaiAppParser:
