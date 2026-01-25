@@ -53,5 +53,6 @@ paiping-app-spider/
 │   └── util.py       # 工具函数
 ├── requirements.txt
 ├── data/             # 输出目录
-└── scripts/          # 执行脚本
+├── scripts/          # 执行脚本
+└── spider.log        # 日志
 ```
