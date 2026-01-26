@@ -47,6 +47,7 @@ data/YYYY-MM-DD/images/图片.jpg
 paiping-app-spider/
 ├── main.py           # 入口脚本
 ├── spider/
+│   ├── data.py       # 数据类型定义
 │   ├── fetcher.py    # API请求模块
 │   ├── parser.py     # 解析模块
 │   ├── saver.py      # 文件保存模块
