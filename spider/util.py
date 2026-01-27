@@ -1,4 +1,14 @@
+import datetime as dt
+
 import requests
+
+
+def date_format(d: dt.datetime) -> str:
+    return d.strftime("%Y-%m-%d")
+
+
+def datetime_format(d: dt.datetime) -> str:
+    return d.strftime("%Y-%m-%d %H:%M:%S")
 
 
 def fetch_image_bytes(url, timeout=10, headers=None) -> bytes:

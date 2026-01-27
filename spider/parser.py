@@ -8,13 +8,12 @@ from bs4.element import Tag
 from markdownify import markdownify as md
 
 from .data import PaiAppData, PaiAppMdFrontmatter, PaiAppRawData, PaiArticleData
+from .util import date_format, datetime_format
 
 
 class PaiAppParser:
     SSPAI_ARTICLE_BASE_URL = "https://sspai.com/post"
     SPECIAL_IMAGE_SUFFIX = (".png", ".jpg", ".jpeg", "PNG", ".JPG", ".JPEG")
-    DATE_FORMAT = "%Y-%m-%d"
-    DATE_TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
     def parse_apps(self, article_raw: dict[str, Any] | None) -> Iterator[PaiAppData]:
         if article_raw is None:
@@ -24,9 +23,9 @@ class PaiAppParser:
         date = "1970-01-01"
         time = "1970-01-01 00:00:00"
         if "released_time" in article_raw:
-            dt = datetime.datetime.fromtimestamp(article_raw["released_time"])
-            date = dt.strftime(self.DATE_FORMAT)
-            time = dt.strftime(self.DATE_TIME_FORMAT)
+            d = datetime.datetime.fromtimestamp(article_raw["released_time"])
+            date = date_format(d)
+            time = datetime_format(d)
 
         article_data = PaiArticleData(
             id=article_raw["id"],
