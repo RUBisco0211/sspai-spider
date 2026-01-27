@@ -30,6 +30,9 @@ class PaiAppSaver:
         content = app_data.content
         filepath = os.path.join(date_dir, filename)
 
+        if os.path.exists(filepath):
+            logging.info(f"Saver: 文件 {filepath} 将被覆盖")
+
         try:
             with open(filepath, "w", encoding="utf-8") as f:
                 f.write(content)
